@@ -9,7 +9,7 @@ import { Obj } from './obj.js';
 
 export class Room extends Box {
   type: string;
-  
+
   name: string;
   subtitle: string;
   description: string;
@@ -34,7 +34,7 @@ export class Room extends Box {
   }
 
   get nameColor() {
-    if(!this._nameColor) return this.map.settings.room.nameColor;
+    if (!this._nameColor) return this.map.settings.room.nameColor;
     return this._nameColor;
   }
 
@@ -43,13 +43,13 @@ export class Room extends Box {
   }
 
   get subtitleColor() {
-    if(!this._subtitleColor) return this.map.settings.room.subtitleColor;
+    if (!this._subtitleColor) return this.map.settings.room.subtitleColor;
     return this._subtitleColor;
   }
 
   set subtitleColor(color: string) {
     this._subtitleColor = color;
-  }  
+  }
 
   get fillColor() {
     return this._fillColor ? this._fillColor : this.map.settings.room.fillColor;
@@ -65,7 +65,7 @@ export class Room extends Box {
 
   set borderColor(color: string) {
     this._borderColor = color;
-  }  
+  }
 
   get rounding() {
     return this._rounding != null ? this._rounding : this.map.settings.room.rounding;
@@ -97,27 +97,27 @@ export class Room extends Box {
 
   set lineWidth(width: number) {
     this._lineWidth = width;
-  }    
+  }
 
   isStartRoom(): boolean {
     return this.map.startRoom == this;
   }
 
   setStartRoom(isStartRoom: boolean) {
-    if(isStartRoom) {
+    if (isStartRoom) {
       this.map.setStartRoom(this);
     } else {
-      if(this.isStartRoom) this.map.setStartRoom(null);
+      if (this.isStartRoom) this.map.setStartRoom(null);
     }
   }
 
   // Returns true if this room has a connector in the specified direction.
   hasConnection(dir: Direction) {
     let found = false;
-    this.map.elements.forEach((model) => { 
-      if(model instanceof Connector) {
-        if(model.dockStart == this && model.startDir == dir) found = true;
-        if(model.dockEnd == this && model.endDir == dir) found = true;
+    this.map.elements.forEach((model) => {
+      if (model instanceof Connector) {
+        if (model.dockStart == this && model.startDir == dir) found = true;
+        if (model.dockEnd == this && model.endDir == dir) found = true;
       }
     });
     return found;
@@ -126,30 +126,30 @@ export class Room extends Box {
   clone(): Model {
     return this.cloneToTarget(new Room(new MapSettings()));
   }
-  
+
   // 
   // List of connectors that connect this room to 
   // another room.
   // 
   get connectors(): Array<Connector> {
-    return this.map.elements.filter((conn) => { 
-      return conn instanceof Connector 
-          && conn.dockStart 
-          && conn.dockEnd 
-          && (conn.dockStart == this || conn.dockEnd == this); }) as Array<Connector>;
+    return this.map.elements.filter((conn) => {
+      return conn instanceof Connector
+        && conn.dockStart
+        && conn.dockEnd && (conn.dockStart == this || conn.dockEnd == this);
+    }) as Array<Connector>;
   }
 
   // 
   // List of StartDirection, EndDirection, Room tuples representing connections
   // from this room.
   // 
-  get connections(): Array<{ startDir: Direction, endDir: Direction, room: Room }> {
+  get connections(): Array<{ startDir: Direction, endDir: Direction, room: Room, width: Number }> {
     let connectors = this.connectors;
-    return connectors.map((conn) => { 
-      if(conn.dockStart == this) {
-        return {startDir: conn.startDir, endDir: conn.endDir, room: conn.dockEnd};
-      } else { 
-        return {startDir: conn.endDir, endDir: conn.startDir, room: conn.dockStart};
+    return connectors.map((conn) => {
+      if (conn.dockStart == this) {
+        return { startDir: conn.startDir, endDir: conn.endDir, room: conn.dockEnd, width: conn.width };
+      } else {
+        return { startDir: conn.endDir, endDir: conn.startDir, room: conn.dockStart, width: conn.width };
       }
     });
   }

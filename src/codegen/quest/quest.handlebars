@@ -25,6 +25,7 @@
     {{/if}} {{#each this.connections}}
     <exit alias="{{dirToStr this.startDir}}" to="{{{this.room.name}}}">
       <inherit name="{{dirToStr this.startDir}}direction" />
+      <attr name="grid_length" type="int">{{this.width}}</attr>
     </exit>
     {{/each}} {{#each this.objects}} {{> questObject object=this}} {{/each}}
   </object>

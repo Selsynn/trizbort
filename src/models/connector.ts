@@ -14,7 +14,7 @@ export class Connector extends Model {
   startY: number;
   endX: number;
   endY: number;
-  dockStart: Room; 
+  dockStart: Room;
   dockEnd: Room;
   startDir: Direction;
   endDir: Direction;
@@ -23,7 +23,7 @@ export class Connector extends Model {
   endType: ConnectorType;
   startLabel: string;
   endLabel: string;
-  
+
   private _color: string;
   private _lineStyle: LineStyle;
   private _lineWidth: number;
@@ -78,9 +78,13 @@ export class Connector extends Model {
     this._isCurve = curve;
   }
 
+  get width() {
+    return Math.max(Math.abs(this.dockEnd.x - this.dockStart.x) / 32 - this.dockEnd.width / 32, Math.abs(this.dockEnd.y - this.dockStart.y) / 32 - this.dockEnd.height / 32);
+  }
+
   reverse() {
-    if(!this.isDoubleDocked()) return;
-    [this.dockEnd, this.dockStart]  = [this.dockStart, this.dockEnd];
+    if (!this.isDoubleDocked()) return;
+    [this.dockEnd, this.dockStart] = [this.dockStart, this.dockEnd];
     [this.endDir, this.startDir] = [this.startDir, this.endDir];
   }
 
@@ -90,5 +94,5 @@ export class Connector extends Model {
 
   clone(): Model {
     return this.cloneToTarget(new Connector(new MapSettings()));
-  }  
+  }
 }
